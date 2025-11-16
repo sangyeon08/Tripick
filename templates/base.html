@@ -17,7 +17,7 @@
             
             {% if username %}
                 <span style="color: var(--blue-primary); font-weight: 700; margin-left: 1rem;">
-                    👤 {{ username }}
+                    {{ username }}
                 </span>
                 <a href="{{ url_for('logout') }}" style="color: var(--red);">로그아웃</a>
             {% else %}

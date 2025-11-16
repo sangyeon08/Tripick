@@ -2,14 +2,14 @@
 {% block content %}
 <section class="hero">
     <div class="hero-text">
-        <h1>✨ 추천 결과</h1>
+        <h1>추천 결과</h1>
         <p>입력한 키워드에 맞는 여행지를 확인해 보세요.</p>
     </div>
 </section>
 
 <section class="main-grid">
     <section class="panel">
-        <h2>🔄 다시 찾기</h2>
+        <h2>다시 찾기</h2>
         <form method="post" action="{{ url_for('recommend') }}" class="keyword-form">
             <label for="keywords">키워드를 쉼표로 구분해서 입력하세요</label>
             <input
@@ -19,13 +19,13 @@
                 placeholder="예: 바다, 휴양지"
                 value="{{ keywords_text }}"
             >
-            <button type="submit" class="primary-btn">✨ 여행지 추천 받기</button>
+            <button type="submit" class="primary-btn">여행지 추천 받기</button>
         </form>
 
         <div class="hint-box">
             {% if parsed_keywords %}
                 <p class="parsed">
-                    <strong>🎯 인식된 키워드:</strong>
+                    <strong>인식된 키워드:</strong>
                     {% for kw in parsed_keywords %}
                         <strong>{{ kw }}</strong>{% if not loop.last %}, {% endif %}
                     {% endfor %}
@@ -35,7 +35,7 @@
     </section>
 
     <section class="panel">
-        <h2>🎯 추천 여행지</h2>
+        <h2>추천 여행지</h2>
         {% if results %}
             <div class="card-list">
                 {% for dest in results %}
@@ -45,36 +45,36 @@
                         {% elif dest.name == "제주도" %}
                             <img src="https://images.unsplash.com/photo-1613508637583-fd309b8bee49?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "부산" %}
-                            <img src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1638591751482-1a7d27fcea15?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "교토" %}
-                            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1578469645742-46cae010e5d4?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "도쿄" %}
-                            <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1513407030348-c983a97b98d8?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "파리" %}
-                            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1595366835965-d37743073e45?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "니스" %}
-                            <img src="https://images.unsplash.com/photo-1523755231516-e43fd2e8dca5?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1491166617655-0723a0999cfc?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "발리" %}
-                            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1604999333679-b86d54738315?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "방콕" %}
                             <img src="https://images.unsplash.com/photo-1563492065599-3520f775eeed?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "푸켓" %}
                             <img src="https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "하노이" %}
-                            <img src="https://images.unsplash.com/photo-1555899434-94d1526a7919?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1598790193169-5841a2d75d04?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "다낭" %}
-                            <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1582473788468-d25f5f398cce?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "시드니" %}
                             <img src="https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "골드코스트" %}
-                            <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1607309843659-f4ad95cf3277?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "싱가포르" %}
                             <img src="https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% elif dest.name == "타이베이" %}
-                            <img src="https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                            <img src="https://images.unsplash.com/photo-1598935898639-81586f7d2129?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
                         {% else %}
-                            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
-                        {% endif %}
+                            <img src="https://images.unsplash.com/photo-1706382807326-fb15c3354191?w=800&h=400&fit=crop" alt="{{ dest.name }}" class="card-image">
+                        {% endif %} 
                         
                         <div class="card-content">
                             <div class="card-header">
