@@ -1,9 +1,11 @@
 class Keyword_mg:
+    
     def __init__(self):
         self.valid_keywords = [
             "바다", "산", "휴양지", "도시", "조용한"
         ]
 
+        # 비슷하게 처리할 애들
         self.synonyms = {
             "해변": "바다",
             "휴식": "휴양지",
@@ -20,7 +22,8 @@ class Keyword_mg:
 
         for keyword in keywords:
             keyword = keyword.strip()
-            if not keyword:
+            
+            if keyword == "":
                 continue
 
             if keyword in self.synonyms:
@@ -32,23 +35,26 @@ class Keyword_mg:
             else:
                 invalid.append(keyword)
 
-        if invalid:
-            print("사용할 수 없는 키워드(무시됨):", invalid)
+        if len(invalid) > 0:
+            print("무시하는 애들:", invalid)
 
         return result
 
     def show_help(self):
-        print("\n사용 가능한 키워드 목록:")
-        for kw in self.valid_keywords:
-            print("-", kw)
+        print("\n되는 애들:")
+        for keyword in self.valid_keywords:
+            print("-", keyword)
 
     def suggest(self, prefix):
         prefix = prefix.strip()
-        if not prefix:
+        
+        if prefix == "":
             return []
 
         suggestions = []
-        for kw in self.valid_keywords:
-            if kw.startswith(prefix):
-                suggestions.append(kw)
+        
+        for keyword in self.valid_keywords:
+            if keyword.startswith(prefix):
+                suggestions.append(keyword)
+        
         return suggestions

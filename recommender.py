@@ -1,77 +1,90 @@
 from destination import Destination
 
-
 class Recommender:
-
-    def __init__(self, filename="destinations.txt"):
+    
+    def __init__(self, filename="data/destinations.txt"):
         self.destinations = []
         self.filename = filename
         self.load_destinations()
 
     def load_destinations(self):
-        try:
-            with open(self.filename, "r", encoding="utf-8") as f:
-                self.destinations = []
-                for line in f:
-                    line = line.strip()
-                    if not line or line.startswith("#"):
-                        continue
-                    parts = line.split("|")
-                    if len(parts) != 3:
-                        continue
-                    name = parts[0].strip()
-                    country = parts[1].strip()
-                    kw_text = parts[2].strip()
-                    keywords = [k.strip() for k in kw_text.split(",") if k.strip()]
-                    dest = Destination(name, country, keywords)
-                    self.destinations.append(dest)
+        self.destinations = []
+        
+        file = open(self.filename, "r", encoding="utf-8")
+        lines = file.readlines()
+        file.close()
+        
+        for line in lines:
+            line = line.strip()  # 양공백 제거 개신기하네
+            
+            if line == "" or line.startswith("#"):
+                continue
+            
+            # 형식: 이름|나라|키워드1,키워드2, 등등ㄷ으
+            parts = line.split("|")
+            
+            # 3개 부분이 아니면 건너뛰어!
+            if len(parts) != 3:
+                continue
+            
+            # 각 부분 빼오기
+            name = parts[0].strip()
+            country = parts[1].strip()
+            keywords_text = parts[2].strip()
+            
+            # 키워드를 쉼표로 나누기
+            keywords = []
+            for keyword in keywords_text.split(","):
+                keyword = keyword.strip()
+                if keyword != "":
+                    keywords.append(keyword)
+            
+            # Destination 객체 만들어서 리스트에 추가
+            dest = Destination(name, country, keywords)
+            self.destinations.append(dest)
 
-            if not self.destinations:
-                self._load_default_destinations()
-
-        except FileNotFoundError:
-            self._load_default_destinations()
-        except Exception as e:
-            print("여행지 데이터를 읽는 중 오류 발생:", e)
-            self._load_default_destinations()
-
-    def _load_default_destinations(self):
-        self.destinations = [
-            Destination("몰디브", "몰디브", ["바다", "휴양지"], "에메랄드빛 바다와 리조트"),
-            Destination("제주도", "대한민국", ["바다", "산", "휴양지"], "국내에서 즐기는 섬 여행"),
-            Destination("교토", "일본", ["도시", "조용한"], "조용한 사찰과 전통 거리"),
-            Destination("발리", "인도네시아", ["바다", "휴양지"], "휴양과 서핑을 즐기기 좋은 섬"),
-            Destination("파리", "프랑스", ["도시", "조용한"], "예술과 카페 문화의 도시"),
-            Destination("방콕", "태국", ["도시", "휴양지"], "야시장과 맛집이 많은 도시"),
-        ]
-
-    def recommend(self, keywords):
-        if not keywords:
+    def recommend(self, user_keywords):
+        if len(user_keywords) == 0:
             return []
 
-        scored = []
+        scored_list = []  # (여행지, 점수) 구조임 헷갈리지 X
+        
         for dest in self.destinations:
-            score = dest.match_keywords(keywords)
+            score = 0
+            for keyword in user_keywords:
+                if keyword in dest.keywords:
+                    score = score + 1
+            
             if score > 0:
-                scored.append((dest, score))
+                scored_list.append((dest, score))
 
-        if not scored:
+        # 결과 없으면 빈 리스트로
+        if len(scored_list) == 0:
             return []
 
-        scored.sort(key=lambda x: x[1], reverse=True)
-        top = scored[:3]
-        results = [item[0] for item in top]
+        # 점수 높은 순으로 정렬
+        # lambda x: x[1] -- 튜플의 두 번째 요소(점수)로 정렬
+        # reverse=True: 큰 것부터 (내림차순) ...개신기하네 오케이!
+        scored_list.sort(key=lambda x: x[1], reverse=True)
+        
+        top_3 = scored_list[:3]
+        
+        # 여행지 객체만 가져오기
+        results = []
+        for item in top_3:
+            dest = item[0]
+            results.append(dest)
+        
         return results
 
     def add_destination(self, name, country, keywords):
-        kw_text = ",".join(keywords)
-
-        try:
-            with open(self.filename, "a", encoding="utf-8") as f:
-                line = f"{name}|{country}|{kw_text}\n"
-                f.write(line)
-            print(f"여행지 '{name}' 가(이) 파일에 추가되었습니다.")
-        except Exception as e:
-            print("여행지를 파일에 추가하는 중 오류 발생:", e)
-
+        keywords_text = ",".join(keywords)
+        
+        file = open(self.filename, "a", encoding="utf-8")
+        new_line = name + "|" + country + "|" + keywords_text + "\n"
+        file.write(new_line)
+        file.close()
+        
+        print(name + " 가(이) 파일에 추가되었습니다.")
+        
         self.load_destinations()

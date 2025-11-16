@@ -1,0 +1,17 @@
+# 1. Python이 설치되어 있는지 확인
+python --version
+
+# 2. 프로젝트 폴더로 이동
+cd "압축_푼_폴더_경로"
+
+# 3. 가상환경 생성 (선택사항이지만 권장)
+python -m venv venv
+
+# 4. 가상환경 활성화
+.\venv\Scripts\activate
+
+# 5. Flask 설치
+pip install flask
+
+# 6. 애플리케이션 실행
+python app.py
