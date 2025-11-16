@@ -10,6 +10,27 @@
     </div>
 </section>
 
+<section style="margin-bottom: 3rem;">
+    <div class="destination-images">
+        <div class="destination-image-card">
+            <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop" alt="몰디브 바다">
+            <div class="caption">푸른 바다</div>
+        </div>
+        <div class="destination-image-card">
+            <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400&h=300&fit=crop" alt="도쿄 도시">
+            <div class="caption">활기찬 도시</div>
+        </div>
+        <div class="destination-image-card">
+            <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?w=400&h=300&fit=crop" alt="제주도 산">
+            <div class="caption">평화로운 산</div>
+        </div>
+        <div class="destination-image-card">
+            <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?w=400&h=300&fit=crop" alt="발리 휴양지">
+            <div class="caption">힐링 휴양지</div>
+        </div>
+    </div>
+</section>
+
 <section class="main-grid">
     <section class="panel">
         <h2>키워드로 찾기</h2>
@@ -22,7 +43,7 @@
                 placeholder="예: 바다, 휴양지"
                 value=""
             >
-            <button type="submit">여행지 추천 받기</button>
+            <button type="submit" class="primary-btn">여행지 추천 받기</button>
         </form>
 
         <div class="hint-box">
@@ -33,13 +54,6 @@
                 {% endfor %}
             </div>
         </div>
-    </section>
-
-    <section class="panel">
-        <h2>추천 결과</h2>
-        <p class="empty-text">
-            키워드를 입력하고 '여행지 추천 받기' 버튼을 눌러주세요.
-        </p>
     </section>
 </section>
 {% endblock %}

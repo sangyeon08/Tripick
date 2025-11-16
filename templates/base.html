@@ -14,6 +14,16 @@
         <nav class="nav-links">
             <a href="{{ url_for('home') }}">여행지 추천</a>
             <a href="{{ url_for('favorites') }}">즐겨찾기</a>
+            
+            {% if username %}
+                <span style="color: var(--blue-primary); font-weight: 700; margin-left: 1rem;">
+                    👤 {{ username }}
+                </span>
+                <a href="{{ url_for('logout') }}" style="color: var(--red);">로그아웃</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">로그인</a>
+                <a href="{{ url_for('register') }}">회원가입</a>
+            {% endif %}
         </nav>
     </div>
 </header>
