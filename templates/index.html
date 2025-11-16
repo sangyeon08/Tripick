@@ -1,10 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>어디로 떠나볼까?</h1>
+        <p>간단한 키워드로, 지금 마음에 맞는 여행지를 추천받아 보세요.</p>
+        <p class="hero-sub">
+            예시: <code>바다, 휴양지</code> / <code>도시, 조용한</code>
+        </p>
+    </div>
+</section>
 
-</body>
-</html>
+<section class="main-grid">
+    <!-- 왼쪽: 키워드 입력 / 도움 -->
+    <section class="panel">
+        <h2>키워드로 찾기</h2>
+        <form method="post" action="{{ url_for('index') }}" class="keyword-form">
+            <label for="keywords">키워드를 쉼표로 구분해서 입력하세요</label>
+            <input
+                id="keywords"
+                name="keywords"
+                type="text"
+                placeholder="예: 바다, 휴양지"
+                value="{{ keywords_text }}"
+            >
+            <button type="submit">여행지 추천 받기</button>
+        </form>
+
+        <div class="hint-box">
+            <h3>사용 가능한 키워드</h3>
+            <div class="chip-list">
+                {% for kw in valid_keywords %}
+                    <span class="chip">{{ kw }}</span>
+                {% endfor %}
+            </div>
+            {% if parsed_keywords %}
+                <p class="parsed">
+                    인식된 키워드:
+                    {% for kw in parsed_keywords %}
+                        <strong>{{ kw }}</strong>{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- 오른쪽: 추천 결과 -->
+    <section class="panel">
+        <h2>추천 결과</h2>
+        {% if results %}
+            <div class="card-list">
+                {% for dest in results %}
+                    <article class="card">
+                        <div class="card-header">
+                            <h3>{{ dest.name }}</h3>
+                            <span class="country">{{ dest.country }}</span>
+                        </div>
+                        <p class="tags">
+                            {% for kw in dest.keywords %}
+                                <span class="tag">{{ kw }}</span>
+                            {% endfor %}
+                        </p>
+                        {% if dest.description %}
+                            <p class="desc">{{ dest.description }}</p>
+                        {% endif %}
+                        <form method="post" action="{{ url_for('add_favorite') }}">
+                            <input type="hidden" name="name" value="{{ dest.name }}">
+                            <button type="submit" class="secondary-btn">즐겨찾기에 추가</button>
+                        </form>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-text">
+                아직 추천 결과가 없습니다. 위에 키워드를 입력해 보세요.
+            </p>
+        {% endif %}
+    </section>
+</section>
+
+<!-- 즐겨찾기 섹션 -->
+<section class="favorites-section">
+    <div class="panel">
+        <h2>나의 즐겨찾기</h2>
+        {% if favorites %}
+            <ul class="fav-list">
+                {% for name in favorites %}
+                    <li>
+                        <span>{{ name }}</span>
+                        <form method="post" action="{{ url_for('delete_favorite') }}">
+                            <input type="hidden" name="name" value="{{ name }}">
+                            <button type="submit" class="link-btn">삭제</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-text">아직 즐겨찾기한 여행지가 없습니다.</p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <h2>여행지 직접 추가</h2>
+        <p class="desc">
+            여행지 추가는 현재 <strong>콘솔 버전</strong>에서만 지원됩니다.<br>
+            (Python 실행 후 메뉴 5번 사용)
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero hero-quiz">
+    <div class="hero-text">
+        <h1>수도 퀴즈 🇺🇳</h1>
+        <p>여행지 추천 서비스에 숨겨진 이스터에그! 국가의 수도를 맞혀보세요.</p>
+    </div>
+</section>
+
+<section class="quiz-panel panel">
+    {% if message %}
+        <div class="quiz-message">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('quiz') }}" class="quiz-form">
+        <p class="quiz-question">
+            <strong>{{ country }}</strong>의 수도는 어디일까요?
+        </p>
+        <p class="quiz-hint">
+            힌트: {{ hint }}
+        </p>
+        <input type="hidden" name="country" value="{{ country }}">
+        <input
+            type="text"
+            name="answer"
+            placeholder="수도 이름을 입력하세요"
+            required
+        >
+        <button type="submit">정답 제출</button>
+    </form>
+
+    <p class="quiz-note">
+        새 문제는 정답을 제출할 때마다 자동으로 출제됩니다.
+    </p>
+</section>
+{% endblock %}

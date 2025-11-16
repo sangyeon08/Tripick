@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Tripick - 여행지 추천</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header class="top-bar">
+    <div class="top-bar-inner">
+        <a href="{{ url_for('index') }}" class="logo">
+            ✈ Tripick
+        </a>
+        <nav class="nav-links">
+            <a href="{{ url_for('index') }}">여행지 추천</a>
+            <a href="{{ url_for('quiz') }}" class="nav-quiz">수도 퀴즈</a>
+        </nav>
+    </div>
+</header>
+
+<main class="page-wrapper">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="page-footer">
+    <p>© 2025 Tripick · Keyword-based Travel Picker</p>
+</footer>
+</body>
+</html>
