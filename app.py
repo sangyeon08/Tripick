@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from keyword_mg import Keyword_mg
 from recommender import Recommender
 from favorite import FavoriteManager
+from auth import AuthManager
 import random
 
 CAPITALS = {
@@ -28,22 +29,43 @@ CAPITALS = {
 }
 
 app = Flask(__name__)
+app.secret_key = "tripick_secret_key_2025"
 
 km = Keyword_mg()
 rec = Recommender()
 fav = FavoriteManager()
+auth = AuthManager()
 
 
 @app.route("/")
+def index():
+    if "username" in session:
+        return redirect(url_for("home"))
+    return redirect(url_for("register"))
+
+
+@app.route("/home")
 def home():
+    if "username" not in session:
+        flash("로그인이 필요한 서비스입니다.", "error")
+        return redirect(url_for("login"))
+    
     return render_template(
         "home.html",
-        valid_keywords=km.valid_keywords
+        valid_keywords=km.valid_keywords,
+        username=session.get("username")
     )
 
 
-@app.route("/recommend", methods=["POST"])
+@app.route("/recommend", methods=["GET", "POST"])
 def recommend():
+    if "username" not in session:
+        flash("로그인이 필요한 서비스입니다.", "error")
+        return redirect(url_for("login"))
+    
+    if request.method == "GET":
+        return redirect(url_for("home"))
+    
     keywords_text = request.form.get("keywords", "")
     parsed_keywords = km.process_input(keywords_text)
     results = rec.recommend(parsed_keywords)
@@ -53,34 +75,54 @@ def recommend():
         keywords_text=keywords_text,
         parsed_keywords=parsed_keywords,
         results=results,
+        username=session.get("username")
     )
 
 
 @app.route("/favorites")
 def favorites():
+    if "username" not in session:
+        flash("로그인이 필요한 서비스입니다.", "error")
+        return redirect(url_for("login"))
+    
     return render_template(
         "favorites.html",
-        favorites=fav.favorites
+        favorites=fav.favorites,
+        username=session.get("username")
     )
 
 
-@app.route("/favorite/add", methods=["POST"])
+@app.route("/favorite/add", methods=["GET", "POST"])
 def add_favorite():
-    name = request.form.get("name", "").strip()
-    if name:
-        fav.add(name)
-    if request.referrer:
-        return redirect(request.referrer)
+    if "username" not in session:
+        flash("로그인이 필요한 서비스입니다.", "error")
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if name:
+            fav.add(name)
+        if request.referrer:
+            return redirect(request.referrer)
+        return redirect(url_for("favorites"))
+    
     return redirect(url_for("favorites"))
 
 
-@app.route("/favorite/delete", methods=["POST"])
+@app.route("/favorite/delete", methods=["GET", "POST"])
 def delete_favorite():
-    name = request.form.get("name", "").strip()
-    if name:
-        fav.remove(name)
-    if request.referrer:
-        return redirect(request.referrer)
+    if "username" not in session:
+        flash("로그인이 필요한 서비스입니다.", "error")
+        return redirect(url_for("login"))
+    
+    if request.method == "POST":
+        name = request.form.get("name", "").strip()
+        if name:
+            fav.remove(name)
+        if request.referrer:
+            return redirect(request.referrer)
+        return redirect(url_for("favorites"))
+    
     return redirect(url_for("favorites"))
 
 
@@ -109,8 +151,52 @@ def quiz():
         country=country,
         capital=capital,
         message=message,
-        is_correct=is_correct
+        is_correct=is_correct,
+        username=session.get("username")
     )
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        
+        success, message = auth.register(username, password)
+        
+        if success:
+            flash(message, "success")
+            return redirect(url_for("login"))
+        else:
+            flash(message, "error")
+    
+    return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        
+        success, message = auth.login(username, password)
+        
+        if success:
+            session["username"] = username
+            flash(message, "success")
+            return redirect(url_for("home"))
+        else:
+            flash(message, "error")
+    
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    session.pop('_flashes', None)
+    flash("로그아웃되었습니다.", "success")
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":

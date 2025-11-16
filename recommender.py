@@ -2,7 +2,6 @@ from destination import Destination
 
 
 class Recommender:
-    """여행지 추천 시스템"""
 
     def __init__(self, filename="destinations.txt"):
         self.destinations = []
@@ -10,12 +9,6 @@ class Recommender:
         self.load_destinations()
 
     def load_destinations(self):
-        """
-        여행지 데이터 로드.
-        1) destinations.txt 파일을 먼저 시도
-        2) 없거나 오류가 나면 기본 데이터 사용
-        파일 형식: 이름|나라|키워드1,키워드2,키워드3
-        """
         try:
             with open(self.filename, "r", encoding="utf-8") as f:
                 self.destinations = []
@@ -43,7 +36,6 @@ class Recommender:
             self._load_default_destinations()
 
     def _load_default_destinations(self):
-        """기본 여행지 데이터"""
         self.destinations = [
             Destination("몰디브", "몰디브", ["바다", "휴양지"], "에메랄드빛 바다와 리조트"),
             Destination("제주도", "대한민국", ["바다", "산", "휴양지"], "국내에서 즐기는 섬 여행"),
@@ -54,7 +46,6 @@ class Recommender:
         ]
 
     def recommend(self, keywords):
-        """키워드 기반 추천. 점수 순으로 상위 3개까지 반환"""
         if not keywords:
             return []
 
@@ -73,10 +64,6 @@ class Recommender:
         return results
 
     def add_destination(self, name, country, keywords):
-        """
-        새로운 여행지를 파일에 추가하고,
-        메모리의 destinations 리스트도 다시 로드한다.
-        """
         kw_text = ",".join(keywords)
 
         try:
@@ -87,5 +74,4 @@ class Recommender:
         except Exception as e:
             print("여행지를 파일에 추가하는 중 오류 발생:", e)
 
-        # 추가한 내용이 바로 반영되도록 다시 로드
         self.load_destinations()
