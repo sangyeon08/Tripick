@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div class="hero-text">
+        <h1>나의 즐겨찾기</h1>
+        <p>마음에 드는 여행지를 모아두고 언제든지 다시 확인하세요.</p>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>즐겨찾기 목록</h2>
+    {% if favorites %}
+        <ul class="fav-list">
+            {% for name in favorites %}
+                <li>
+                    <span>{{ name }}</span>
+                    <form method="post" action="{{ url_for('delete_favorite') }}">
+                        <input type="hidden" name="name" value="{{ name }}">
+                        <button type="submit" class="link-btn">삭제</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-text">아직 즐겨찾기한 여행지가 없습니다.</p>
+    {% endif %}
+</section>
+{% endblock %}

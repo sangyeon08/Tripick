@@ -1,5 +1,4 @@
 class FavoriteManager:
-    """즐겨찾기 관리 클래스"""
 
     def __init__(self, filename="favorites.txt"):
         self.favorites = []
@@ -7,7 +6,6 @@ class FavoriteManager:
         self.load()
 
     def add(self, destination_name):
-        """즐겨찾기 추가"""
         if destination_name not in self.favorites:
             self.favorites.append(destination_name)
             print(f"'{destination_name}' 즐겨찾기에 추가됨")
@@ -18,7 +16,6 @@ class FavoriteManager:
             return False
 
     def remove(self, destination_name):
-        """즐겨찾기 삭제"""
         if destination_name in self.favorites:
             self.favorites.remove(destination_name)
             print(f"'{destination_name}' 즐겨찾기에서 삭제됨")
@@ -29,7 +26,6 @@ class FavoriteManager:
             return False
 
     def show(self):
-        """즐겨찾기 목록 출력 (콘솔용)"""
         if not self.favorites:
             print("즐겨찾기 비어있음")
             return
@@ -39,7 +35,6 @@ class FavoriteManager:
             print(f"- {name}")
 
     def save(self):
-        """즐겨찾기 목록을 파일에 저장"""
         try:
             with open(self.filename, "w", encoding="utf-8") as f:
                 for name in self.favorites:
@@ -48,7 +43,6 @@ class FavoriteManager:
             print("즐겨찾기를 저장하는 중 오류 발생:", e)
 
     def load(self):
-        """파일에서 즐겨찾기 목록 불러오기"""
         try:
             with open(self.filename, "r", encoding="utf-8") as f:
                 self.favorites = []

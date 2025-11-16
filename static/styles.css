@@ -1,27 +1,45 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+:root {
+    --blue: #007bff;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --white: #ffffff;
+    --red: #dc3545;
+    --green: #28a745;
+}
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1d3557);
-    color: #f9fafb;
+    font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    background-color: var(--gray-100);
+    color: var(--gray-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 상단 바 */
 .top-bar {
-    background: rgba(15, 23, 42, 0.95);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
     position: sticky;
     top: 0;
     z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .top-bar-inner {
     max-width: 960px;
     margin: 0 auto;
-    padding: 0.75rem 1.25rem;
+    padding: 1rem 1.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -29,82 +47,81 @@ body {
 
 .logo {
     font-weight: 700;
-    font-size: 1.1rem;
-    color: #e5e7eb;
+    font-size: 1.2rem;
+    color: var(--gray-900);
     text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 .logo:hover {
-    color: #38bdf8;
+    color: var(--blue);
 }
 
 .nav-links a {
-    margin-left: 1rem;
-    color: #cbd5f5;
+    margin-left: 1.5rem;
+    color: var(--gray-600);
     text-decoration: none;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-    color: #38bdf8;
+    color: var(--blue);
 }
 
-.nav-quiz {
-    font-weight: 600;
-}
-
-/* 페이지 레이아웃 */
 .page-wrapper {
     max-width: 960px;
     margin: 0 auto;
-    padding: 1.5rem 1.25rem 3rem;
+    padding: 2.5rem 1.5rem 4rem;
 }
 
-/* 히어로 영역 */
 .hero {
-    margin-bottom: 1.5rem;
+    text-align: center;
+    margin-bottom: 3rem;
 }
 
 .hero-text h1 {
-    margin: 0 0 0.5rem;
-    font-size: 1.8rem;
+    margin: 0 0 0.75rem;
+    font-size: 2.5rem;
+    font-weight: 700;
 }
 
 .hero-text p {
-    margin: 0.25rem 0;
-    color: #e5e7eb;
+    margin: 0.5rem 0;
+    color: var(--gray-600);
+    font-size: 1.1rem;
 }
 
 .hero-sub {
-    font-size: 0.9rem;
-    color: #cbd5f5;
+    font-size: 1rem;
+    color: var(--gray-500);
 }
 
 .hero-quiz h1 {
-    font-size: 1.6rem;
+    font-size: 2.2rem;
 }
 
-/* 패널 공통 */
 .panel {
-    background: rgba(15, 23, 42, 0.85);
-    border-radius: 1rem;
-    padding: 1rem 1.25rem 1.25rem;
-    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.65);
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    margin-bottom: 1rem;
+    background: var(--white);
+    border-radius: 0.75rem;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--gray-200);
+    margin-bottom: 1.5rem;
 }
 
 .panel h2 {
     margin-top: 0;
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
 }
 
-/* 메인 그리드 */
 .main-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.5fr);
-    grid-gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+    grid-gap: 1.5rem;
 }
 
 @media (max-width: 768px) {
@@ -113,87 +130,114 @@ body {
     }
 }
 
-/* 입력 폼 */
 .keyword-form {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 }
 
 .keyword-form label {
-    font-size: 0.9rem;
-    color: #cbd5f5;
+    font-size: 0.95rem;
+    color: var(--gray-800);
+    font-weight: 500;
 }
 
 .keyword-form input[type="text"],
 .quiz-form input[type="text"] {
     border-radius: 0.5rem;
-    border: 1px solid rgba(148, 163, 184, 0.7);
-    padding: 0.5rem 0.75rem;
-    font-size: 0.95rem;
-    background: rgba(15, 23, 42, 0.95);
-    color: #f9fafb;
+    border: 1px solid var(--gray-400);
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    background: var(--white);
+    color: var(--gray-900);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.keyword-form button,
-.quiz-form button,
-.secondary-btn {
-    margin-top: 0.25rem;
-    padding: 0.5rem 0.8rem;
+.keyword-form input[type="text"]:focus,
+.quiz-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.primary-btn {
+    margin-top: 0.5rem;
+    padding: 0.75rem 1rem;
     border-radius: 0.5rem;
     border: none;
-    font-size: 0.95rem;
+    font-size: 1rem;
     cursor: pointer;
-    background: linear-gradient(135deg, #38bdf8, #22c55e);
-    color: #0f172a;
+    background: var(--blue);
+    color: var(--white);
     font-weight: 600;
+    transition: background-color 0.2s ease;
 }
 
-.keyword-form button:hover,
-.quiz-form button:hover,
+.primary-btn:hover {
+    background: #0056b3;
+}
+
+.secondary-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 500;
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+    border: 1px solid var(--gray-200);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 .secondary-btn:hover {
-    filter: brightness(1.05);
+    background-color: var(--gray-400);
 }
 
-/* 힌트 박스 */
 .hint-box h3 {
-    margin: 0.25rem 0 0.5rem;
-    font-size: 0.95rem;
+    margin: 1.5rem 0 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .chip-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
-    margin-bottom: 0.25rem;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .chip {
-    font-size: 0.8rem;
-    padding: 0.2rem 0.5rem;
+    font-size: 0.85rem;
+    padding: 0.3rem 0.75rem;
     border-radius: 999px;
-    background: rgba(148, 163, 184, 0.15);
-    border: 1px solid rgba(148, 163, 184, 0.5);
+    background: var(--gray-200);
+    color: var(--gray-800);
 }
 
 .parsed {
-    font-size: 0.85rem;
-    color: #cbd5f5;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-top: 1rem;
 }
 
-/* 추천 카드 */
 .card-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1.25rem;
 }
 
 .card {
-    background: rgba(15, 23, 42, 0.9);
+    background: var(--white);
     border-radius: 0.75rem;
-    padding: 0.75rem 0.9rem;
-    border: 1px solid rgba(148, 163, 184, 0.7);
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--gray-200);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -201,49 +245,40 @@ body {
     justify-content: space-between;
     align-items: baseline;
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .card-header h3 {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 
 .card-header .country {
-    font-size: 0.85rem;
-    color: #9ca3af;
+    font-size: 0.9rem;
+    color: var(--gray-600);
 }
 
 .tags {
-    margin: 0.3rem 0;
+    margin: 0.75rem 0;
 }
 
 .tag {
     display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
     border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.7);
-    margin-right: 0.25rem;
+    background-color: var(--blue);
+    color: var(--white);
+    margin-right: 0.3rem;
+    font-weight: 500;
 }
 
 .desc {
-    font-size: 0.9rem;
-    color: #e5e7eb;
-    margin: 0.25rem 0 0.5rem;
-}
-
-/* 즐겨찾기 */
-.favorites-section {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    grid-gap: 1rem;
-    margin-top: 1rem;
-}
-
-@media (max-width: 768px) {
-    .favorites-section {
-        grid-template-columns: 1fr;
-    }
+    font-size: 1rem;
+    color: var(--gray-800);
+    margin: 0.5rem 0 1rem;
+    line-height: 1.6;
 }
 
 .fav-list {
@@ -256,69 +291,89 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.25rem 0;
-    border-bottom: 1px solid rgba(55, 65, 81, 0.7);
-    font-size: 0.95rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-200);
+    font-size: 1.05rem;
+}
+
+.fav-list li:last-child {
+    border-bottom: none;
 }
 
 .link-btn {
     border: none;
     background: none;
-    color: #f97373;
+    color: var(--red);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding: 0;
+    font-weight: 500;
 }
 
 .link-btn:hover {
     text-decoration: underline;
 }
 
-/* 퀴즈 */
 .quiz-panel {
     max-width: 560px;
     margin: 0 auto;
 }
 
 .quiz-message {
-    margin-bottom: 0.75rem;
-    padding: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    background: rgba(34, 197, 94, 0.1);
-    border: 1px solid rgba(34, 197, 94, 0.7);
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.quiz-message.correct {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid rgba(40, 167, 69, 0.5);
+    color: #155724;
+}
+
+.quiz-message.incorrect {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.5);
+    color: #721c24;
 }
 
 .quiz-form {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .quiz-question {
-    font-size: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
 }
 
 .quiz-hint {
-    font-size: 0.85rem;
-    color: #cbd5f5;
+    font-size: 0.9rem;
+    color: var(--gray-600);
 }
 
 .quiz-note {
-    font-size: 0.8rem;
-    color: #cbd5f5;
-    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-top: 1rem;
+    text-align: center;
 }
 
-/* 기타 */
 .empty-text {
-    font-size: 0.9rem;
-    color: #9ca3af;
+    font-size: 1rem;
+    color: var(--gray-600);
+    text-align: center;
+    padding: 2rem 0;
 }
 
 .page-footer {
     text-align: center;
-    font-size: 0.8rem;
-    color: #9ca3af;
-    padding: 1rem 0 2rem;
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    padding: 2rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid var(--gray-200);
 }

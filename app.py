@@ -4,7 +4,6 @@ from recommender import Recommender
 from favorite import FavoriteManager
 import random
 
-# 웹용 수도 퀴즈 데이터 (20개국)
 CAPITALS = {
     "대한민국": "서울",
     "일본": "도쿄",
@@ -30,81 +29,87 @@ CAPITALS = {
 
 app = Flask(__name__)
 
-# 공용 객체 (한 번만 만들고 계속 사용)
 km = Keyword_mg()
 rec = Recommender()
 fav = FavoriteManager()
 
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    """메인 페이지: 키워드 입력 + 추천 결과 + 즐겨찾기"""
-    keywords_text = ""
-    parsed_keywords = []
-    results = []
+@app.route("/")
+def home():
+    return render_template(
+        "home.html",
+        valid_keywords=km.valid_keywords
+    )
 
-    if request.method == "POST":
-        keywords_text = request.form.get("keywords", "")
-        parsed_keywords = km.process_input(keywords_text)
-        results = rec.recommend(parsed_keywords)
+
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    keywords_text = request.form.get("keywords", "")
+    parsed_keywords = km.process_input(keywords_text)
+    results = rec.recommend(parsed_keywords)
 
     return render_template(
-        "index.html",
+        "recommend.html",
         keywords_text=keywords_text,
         parsed_keywords=parsed_keywords,
         results=results,
-        favorites=fav.favorites,
-        valid_keywords=km.valid_keywords
+    )
+
+
+@app.route("/favorites")
+def favorites():
+    return render_template(
+        "favorites.html",
+        favorites=fav.favorites
     )
 
 
 @app.route("/favorite/add", methods=["POST"])
 def add_favorite():
-    """즐겨찾기 추가"""
     name = request.form.get("name", "").strip()
     if name:
         fav.add(name)
-    return redirect(url_for("index"))
+    if request.referrer:
+        return redirect(request.referrer)
+    return redirect(url_for("favorites"))
 
 
 @app.route("/favorite/delete", methods=["POST"])
 def delete_favorite():
-    """즐겨찾기 삭제"""
     name = request.form.get("name", "").strip()
     if name:
         fav.remove(name)
-    return redirect(url_for("index"))
+    if request.referrer:
+        return redirect(request.referrer)
+    return redirect(url_for("favorites"))
 
 
 @app.route("/quiz", methods=["GET", "POST"])
 def quiz():
-    """
-    수도 퀴즈 페이지.
-    POST로 답을 받으면 결과 메시지 보여주고,
-    항상 새로운 문제를 하나 더 내줌.
-    """
     message = None
+    is_correct = None
 
     if request.method == "POST":
         prev_country = request.form.get("country")
         answer = request.form.get("answer", "").strip()
-        correct = CAPITALS.get(prev_country)
-        if correct:
-            if answer == correct:
-                message = f"정답입니다! {prev_country}의 수도는 {correct}입니다."
+        correct_answer = CAPITALS.get(prev_country)
+        if correct_answer:
+            if answer == correct_answer:
+                is_correct = True
+                message = f"정답! {prev_country}의 수도는 {correct_answer}입니다."
             else:
-                message = f"틀렸어요. {prev_country}의 수도는 {correct}입니다."
+                is_correct = False
+                message = f"오답! {prev_country}의 수도는 {correct_answer}입니다. 입력한 답: {answer}"
 
-    # 다음 문제 출제
     country = random.choice(list(CAPITALS.keys()))
     capital = CAPITALS[country]
-    hint = capital[0] + "*" * (len(capital) - 1)
 
     return render_template(
         "quiz.html",
         country=country,
-        hint=hint,
-        message=message
+        capital=capital,
+        message=message,
+        is_correct=is_correct
     )
 
 

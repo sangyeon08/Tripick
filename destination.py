@@ -2,10 +2,10 @@ class Destination:
     """여행지 정보를 담는 클래스"""
 
     def __init__(self, name, country, keywords, description=""):
-        self.name = name               # 여행지 이름
-        self.country = country         # 나라 이름
-        self.keywords = keywords       # 여행지 특징 키워드 리스트
-        self.description = description # 간단한 소개 문장(선택)
+        self.name = name
+        self.country = country
+        self.keywords = keywords
+        self.description = description
 
     def __str__(self):
         """객체를 문자열로 출력할 때 사용"""

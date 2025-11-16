@@ -8,12 +8,12 @@
 <body>
 <header class="top-bar">
     <div class="top-bar-inner">
-        <a href="{{ url_for('index') }}" class="logo">
-            ✈ Tripick
+        <a href="{{ url_for('home') }}" class="logo">
+            Tripick
         </a>
         <nav class="nav-links">
-            <a href="{{ url_for('index') }}">여행지 추천</a>
-            <a href="{{ url_for('quiz') }}" class="nav-quiz">수도 퀴즈</a>
+            <a href="{{ url_for('home') }}">여행지 추천</a>
+            <a href="{{ url_for('favorites') }}">즐겨찾기</a>
         </nav>
     </div>
 </header>
@@ -25,5 +25,29 @@
 <footer class="page-footer">
     <p>© 2025 Tripick · Keyword-based Travel Picker</p>
 </footer>
+
+<script>
+    let clickCount = 0;
+    let clickTimer = null;
+    const logo = document.querySelector('.logo');
+
+    logo.addEventListener('click', function (e) {
+        e.preventDefault();
+        clickCount++;
+
+        if (clickCount === 1) {
+            clickTimer = setTimeout(() => {
+                if (clickCount === 1) {
+                    window.location.href = this.href;
+                }
+                clickCount = 0;
+            }, 1000);
+        } else if (clickCount === 3) {
+            clearTimeout(clickTimer);
+            clickCount = 0;
+            window.location.href = "{{ url_for('quiz') }}";
+        }
+    });
+</script>
 </body>
 </html>
