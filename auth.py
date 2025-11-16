@@ -1,9 +1,8 @@
-import hashlib
-from datetime import datetime
 import os
-
+import datetime
 
 class AuthManager:
+    
     def __init__(self, sql_file="users.sql"):
         self.sql_file = sql_file
         self.users = {}
@@ -14,31 +13,48 @@ class AuthManager:
             self.create_initial_sql()
             return
         
-        try:
-            with open(self.sql_file, 'r', encoding='utf-8') as f:
-                content = f.read()
-                
-            for line in content.split('\n'):
-                if line.strip().startswith('INSERT INTO users'):
-                    if 'VALUES' in line:
-                        values_part = line.split('VALUES')[1].strip()
-                        values_part = values_part.strip('();')
-                        parts = [p.strip().strip("'") for p in values_part.split(',')]
-                        if len(parts) >= 3:
-                            username = parts[0]
-                            password = parts[1]
-                            created_at = parts[2]
-                            self.users[username] = {
-                                'password': password,
-                                'created_at': created_at
-                            }
-        except Exception as e:
-            print(f"SQL 파일 로드 중 오류: {e}")
-            self.create_initial_sql()
+        file = open(self.sql_file, 'r', encoding='utf-8')
+        content = file.read()
+        file.close()
+        
+        lines = content.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            
+            # INSERT 문만 처리 (사용자 데이터가 들어있는 줄)
+            if line.startswith('INSERT INTO users'):
+                # VALUES 뒷부분 찾기
+                if 'VALUES' in line:
+                    # VALUES 뒷부분만 빼오기
+                    values_part = line.split('VALUES')[1]
+                    values_part = values_part.strip()
+                    values_part = values_part.strip('();')
+                    
+                    parts = values_part.split(',')
+                    
+                    clean_parts = []
+                    for part in parts:
+                        part = part.strip()
+                        part = part.strip("'")
+                        clean_parts.append(part)
+                    
+                    # 3개 부분이 있어야 함 (아이디, 비밀번호, 가입날짜)
+                    if len(clean_parts) >= 3:
+                        username = clean_parts[0]
+                        password = clean_parts[1]
+                        created_at = clean_parts[2]
+                        
+                        # 딕셔너리에 저장
+                        self.users[username] = {
+                            'password': password,
+                            'created_at': created_at
+                        }
 
     def create_initial_sql(self):
-        initial_content = """-- Tripick Users Database
--- Created: {}
+        """처음 SQL 파일 만들기 (파일이 없을 때 쓰려고)"""
+        sql_text = """-- Tripick Users Database
+-- Created: 2025-11-17
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,17 +64,16 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- User Data (INSERT statements will be added below)
-""".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+"""
         
-        try:
-            with open(self.sql_file, 'w', encoding='utf-8') as f:
-                f.write(initial_content)
-        except Exception as e:
-            print(f"SQL 파일 생성 중 오류: {e}")
+        file = open(self.sql_file, 'w', encoding='utf-8')
+        file.write(sql_text)
+        file.close()
 
     def save_to_sql(self):
-        sql_content = """-- Tripick Users Database
--- Last Updated: {}
+        # SQL 파일 헤더 작성 - 이건 왜 필요하지? -> 사용자 데이터 덮어쓰려고
+        sql_text = """-- Tripick Users Database
+-- Last Updated: 2025-11-17
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -71,24 +86,27 @@ CREATE TABLE IF NOT EXISTS users (
 DELETE FROM users;
 
 -- User Data
-""".format(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+"""
         
-        for username, data in self.users.items():
-            password = data['password']
-            created_at = data['created_at']
-            sql_content += f"INSERT INTO users (username, password, created_at) VALUES ('{username}', '{password}', '{created_at}');\n"
+        # 각 사용자 정보를 INSERT 문으로 만들기
+        for username in self.users:
+            password = self.users[username]['password']
+            created_at = self.users[username]['created_at']
+            
+            # INSERT 문
+            insert_line = "INSERT INTO users (username, password, created_at) VALUES ('"
+            insert_line = insert_line + username + "', '"
+            insert_line = insert_line + password + "', '"
+            insert_line = insert_line + created_at + "');\n"
+            
+            sql_text = sql_text + insert_line
         
-        try:
-            with open(self.sql_file, 'w', encoding='utf-8') as f:
-                f.write(sql_content)
-        except Exception as e:
-            print(f"SQL 파일 저장 중 오류: {e}")
-
-    def hash_password(self, password):
-        return hashlib.sha256(password.encode()).hexdigest()
+        file = open(self.sql_file, 'w', encoding='utf-8')
+        file.write(sql_text)
+        file.close()
 
     def register(self, username, password):
-        if not username or not password:
+        if username == "" or password == "":
             return False, "아이디와 비밀번호를 입력해주세요."
         
         if len(username) < 3:
@@ -100,40 +118,35 @@ DELETE FROM users;
         if username in self.users:
             return False, "이미 존재하는 아이디입니다."
 
-        try:
-            hashed_pw = self.hash_password(password)
-            created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            self.users[username] = {
-                'password': hashed_pw,
-                'created_at': created_at
-            }
-            
-            self.save_to_sql()
-            
-            return True, "회원가입이 완료되었습니다!"
+        # 딕셔너리에 추가
+        self.users[username] = {
+            'password': password,
+            'created_at': datetime.date.today().isoformat()  
+            # 올.. 개신기하네. 원래 고정 날짜로 하려고 했는데. isoformat은 - 넣어줌.
+        }
         
-        except Exception as e:
-            return False, f"오류가 발생했습니다: {str(e)}"
+        self.save_to_sql()
+        
+        return True, "회원가입이 완료되었습니다!"
 
     def login(self, username, password):
-
-        if not username or not password:
+        """로그인 처리"""
+        if username == "" or password == "":
             return False, "아이디와 비밀번호를 입력해주세요."
 
-        try:
-            if username not in self.users:
-                return False, "아이디 또는 비밀번호가 일치하지 않습니다."
-            
-            hashed_pw = self.hash_password(password)
-            
-            if self.users[username]['password'] == hashed_pw:
-                return True, f"{username}님, 환영합니다!"
-            else:
-                return False, "아이디 또는 비밀번호가 일치하지 않습니다."
+        if username not in self.users:
+            return False, "아이디 또는 비밀번호가 일치하지 않습니다."
         
-        except Exception as e:
-            return False, f"오류가 발생했습니다: {str(e)}"
+        saved_password = self.users[username]['password']
+        
+        if password == saved_password:
+            message = username + "님, 환영합니다!"
+            return True, message
+        else:
+            return False, "아이디 또는 비밀번호가 일치하지 않습니다."
 
     def user_exists(self, username):
-        return username in self.users
+        if username in self.users:
+            return True
+        else:
+            return False
